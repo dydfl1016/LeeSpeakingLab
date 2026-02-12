@@ -1,268 +1,625 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kelly Speaking Lab - Full</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LeEnglish Speaking Lab (통합형)</title>
+  <style>
+    :root{
+      --bg:#f4f7f6; --card:#fff; --text:#111827; --muted:#6b7280;
+      --primary:#2563eb; --success:#16a34a; --danger:#dc2626; --dark:#111827;
+      --border:#e5e7eb; --soft:#eff6ff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      display:flex; justify-content:center; padding:18px;
+    }
+    .container{
+      width:100%; max-width:560px; background:var(--card);
+      border-radius:20px; box-shadow:0 10px 25px rgba(0,0,0,.08);
+      padding:16px;
+    }
+    h1{font-size:18px; margin:0 0 10px}
+    .sub{font-size:12px; color:var(--muted); line-height:1.45; margin-bottom:12px}
+    .panel{
+      border:1px solid var(--border); border-radius:16px; padding:12px; background:#fff;
+      margin-bottom:12px;
+    }
+    .grid{
+      display:grid; grid-template-columns: 1fr 1fr; gap:10px;
+    }
+    .grid3{
+      display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;
+    }
+    select{
+      width:100%; padding:12px; border-radius:14px; border:1px solid var(--border);
+      font-size:14px; background:#fff; font-weight:800; outline:none;
+    }
+    .prompt{
+      background:var(--soft); border:1px solid #dbeafe;
+      padding:14px; border-radius:14px;
+      min-height:82px; display:flex; align-items:center; justify-content:center;
+      text-align:center; font-size:18px; font-weight:900; color:#1d4ed8;
+    }
+    .row{display:flex; gap:10px; margin-top:10px}
+    button{
+      width:100%; padding:13px 12px; border:none; border-radius:14px;
+      font-size:15px; font-weight:900; cursor:pointer; transition:.15s;
+    }
+    button:active{transform:scale(.99)}
+    .btn-dark{background:var(--dark); color:#fff}
+    .btn-primary{background:var(--primary); color:#fff}
+    .btn-success{background:var(--success); color:#fff}
+    .btn-danger{background:var(--danger); color:#fff}
+    .btn-ghost{background:#fff; border:1px solid var(--border); color:var(--text); font-weight:800}
+    .status{margin-top:8px; font-size:13px; color:var(--muted); min-height:18px}
 
-<style>
-body{
-  font-family:sans-serif;
-  background:#f4f6f8;
-  display:flex;
-  justify-content:center;
-  padding:20px;
-}
-.container{
-  max-width:520px;
-  width:100%;
-  background:white;
-  padding:25px;
-  border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.1);
-  text-align:center;
-}
-h2{margin-bottom:10px;}
-.prompt{
-  font-size:1.2rem;
-  font-weight:bold;
-  color:#1e4fa3;
-  margin:15px 0;
-}
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  margin-top:8px;
-  font-weight:bold;
-  cursor:pointer;
-}
-.black{background:#111;color:white;}
-.green{background:#2ecc71;color:white;}
-.blue{background:#2e6bd1;color:white;}
-.purple{background:#6c5ce7;color:white;}
-.orange{background:#ff8c42;color:white;}
+    .hint{
+      margin-top:10px; padding:10px; border-radius:12px;
+      background:#fff; border:1px dashed #c7d2fe; display:none;
+    }
+    .hint-title{font-size:12px; color:#3730a3; font-weight:900; margin-bottom:6px}
+    .chips{display:flex; flex-wrap:wrap; gap:6px}
+    .chip{
+      font-size:12px; padding:6px 10px; border-radius:999px;
+      background:#eef2ff; color:#3730a3; border:1px solid #e0e7ff;
+      font-weight:800;
+    }
+    .chip.bad{background:#fee2e2; color:#991b1b; border-color:#fecaca}
+    .chip.good{background:#dcfce7; color:#166534; border-color:#bbf7d0}
 
-textarea{
-  width:100%;
-  height:80px;
-  margin-top:10px;
-  border-radius:10px;
-  padding:10px;
-  border:1px solid #ddd;
-}
+    .box{
+      margin-top:10px; border:1px solid var(--border);
+      border-radius:14px; padding:12px; background:#fafafa;
+    }
+    label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
+    textarea{
+      width:100%; min-height:88px; resize:vertical;
+      padding:10px; border:1px solid var(--border); border-radius:12px;
+      font-size:14px; line-height:1.45; outline:none; background:#fff;
+    }
+    .mini{display:flex; gap:10px; margin-top:10px}
+    audio{width:100%}
 
-.result{
-  background:#f1f5ff;
-  padding:15px;
-  margin-top:15px;
-  border-radius:10px;
-  text-align:left;
-}
+    .result{
+      margin-top:12px; border-left:5px solid var(--primary);
+      background:#f8fafc; padding:12px; border-radius:12px;
+      display:none; font-size:14px; line-height:1.55;
+    }
 
-.word-box{
-  display:inline-block;
-  padding:8px 12px;
-  margin:5px;
-  background:#eee;
-  border-radius:20px;
-  cursor:pointer;
-}
-
-.selected{
-  background:#2e6bd1;
-  color:white;
-}
-</style>
+    /* Modal */
+    .overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.45);
+      display:none; align-items:center; justify-content:center;
+      padding:18px; z-index:9999;
+    }
+    .modal{
+      width:100%; max-width:440px; background:#fff; border-radius:18px;
+      box-shadow:0 20px 60px rgba(0,0,0,.25); overflow:hidden;
+    }
+    .modal-h{
+      padding:14px 14px 10px; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .modal-h strong{font-size:14px}
+    .modal-b{padding:14px; font-size:14px; line-height:1.5}
+    .modal-f{padding:12px 14px; border-top:1px solid var(--border)}
+    .modal-x{
+      width:auto; padding:8px 10px; border-radius:10px;
+      background:#f3f4f6; color:#111827; font-weight:900; border:1px solid #e5e7eb;
+    }
+  </style>
 </head>
-
 <body>
-<div class="container">
+  <div class="container">
+    <h1>LeEnglish Speaking Lab (통합형 MVP)</h1>
+    <div class="sub">
+      ✅ 코스/교재/유닛 선택 → “새 문장” → 영어로 말하기(녹음) → 내 목소리 듣기 → (가능하면) STT → AI 간단 평가<br/>
+      ※ STT는 기기/브라우저에 따라 품질 차이가 큽니다. (녹음/재생은 HTTPS에서 잘 동작)
+    </div>
 
-<h2>리영어 스피킹 랩</h2>
+    <div class="panel">
+      <div class="grid3">
+        <div>
+          <label>코스</label>
+          <select id="courseSelect"></select>
+        </div>
+        <div>
+          <label>교재</label>
+          <select id="bookSelect"></select>
+        </div>
+        <div>
+          <label>유닛</label>
+          <select id="unitSelect"></select>
+        </div>
+      </div>
 
-<button class="black" onclick="setMode('speaking')">🎤 말하기 모드</button>
-<button class="orange" onclick="setMode('unscramble')">🧩 순서 맞추기 모드</button>
+      <div class="row">
+        <button class="btn-dark" id="btnNext">새 문장</button>
+        <button class="btn-ghost" id="btnHint">언스크램블 힌트: OFF</button>
+        <button class="btn-ghost" id="btnShuffleHint">힌트 섞기</button>
+      </div>
 
-<div id="mainArea" style="margin-top:20px;"></div>
+      <div id="koreanPrompt" class="prompt">위에서 코스/교재/유닛을 선택하고 “새 문장”을 눌러주세요</div>
 
-</div>
+      <div id="hintBox" class="hint">
+        <div class="hint-title">🔎 단어 카드(순서 바꿔서) — 이 순서대로 문장을 만들어 말해보세요!</div>
+        <div class="chips" id="hintChips"></div>
+      </div>
+
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <button class="btn-success" id="btnRecord">🎤 녹음 시작</button>
+        <button class="btn-primary" id="btnSTT">📝 STT 시작</button>
+      </div>
+
+      <div class="box">
+        <label>🎧 내 목소리 듣기 (녹음 후 자동 생성)</label>
+        <audio id="playback" controls></audio>
+
+        <div class="mini">
+          <button class="btn-ghost" id="btnClear">초기화</button>
+          <button class="btn-primary" id="btnAnalyze">AI 간단 평가</button>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>📝 STT 결과(영어) — 인식이 틀리면 직접 수정해도 OK</label>
+          <textarea id="sttText" placeholder="STT 결과가 여기에 표시됩니다... (또는 직접 입력 가능)"></textarea>
+        </div>
+
+        <div id="result" class="result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div class="modal-h">
+        <strong id="modalTitle">알림</strong>
+        <button class="modal-x" id="modalClose">닫기</button>
+      </div>
+      <div class="modal-b" id="modalBody"></div>
+      <div class="modal-f">
+        <button class="btn-primary" id="modalOk">확인</button>
+      </div>
+    </div>
+  </div>
 
 <script>
+  /******************************************************************
+   * ✅ DATA만 계속 누적해서 복붙하면 됨
+   *
+   * 구조:
+   * DATA[코스][교재][Unit n] = [ { ko, en, scramble, keys }, ... ]
+   *
+   * 유닛이 늘어나면?
+   * - 그냥 "Unit 17" 같은 키를 추가하고 배열에 문장 넣기만 하면 끝.
+   ******************************************************************/
+  const DATA = {
+    "초등 말하기": {
+      "파닉스 리딩": {
+        "Unit 1": [
+          { ko:"(샘플) 나는 팬을 읽는다.", en:"(Sample) I read Phonics.", scramble:["I","read","Phonics"], keys:["i","read","phonics"] }
+        ]
+      },
+      "리딩": {
+        "Unit 13": [
+          { ko:"사과 한 개가 책상 위에 있다.", en:"An apple is on the desk.", scramble:["on","An","apple","the","desk","is"], keys:["an","apple","is","on","the","desk"] },
+          { ko:"강아지들이 집 안에 있다.", en:"The dogs are in the house.", scramble:["The","dogs","in","are","the","house"], keys:["the","dogs","are","in","house"] },
+          { ko:"오렌지들이 탁자 아래에 있다.", en:"The oranges are under the table.", scramble:["under","are","the","table","The","oranges"], keys:["the","oranges","are","under","table"] },
+          { ko:"고양이 한 마리가 문 뒤에 있다.", en:"A cat is behind the door.", scramble:["the","door","behind","A","cat","is"], keys:["a","cat","is","behind","the","door"] },
+          { ko:"내 친구들이 버스 옆에 있다.", en:"My friends are next to the bus.", scramble:["My","friends","next","to","are","the","bus"], keys:["my","friends","are","next","to","the","bus"] }
+        ],
+        "Unit 14": [
+          { ko:"(샘플) 베스가 물고기 탱크를 두꺼운 매트 위에 둔다.", en:"Beth puts the fish tank on the thick mat.", scramble:["Beth","puts","the","fish","tank","on","the","thick","mat"], keys:["beth","puts","fish","tank","on","thick","mat"] }
+        ]
+      },
+      "논픽션 리딩": {
+        "Unit 1": [
+          { ko:"(샘플) 나는 동물에 대해 배운다.", en:"(Sample) I learn about animals.", scramble:["I","learn","about","animals"], keys:["i","learn","about","animals"] }
+        ]
+      }
+    },
 
-// =====================
-// 📚 데이터 전체 통합
-// =====================
-
-const speakingData = [
-  // Unit 9
-  {ko:"나는 캠프에서 새 친구들을 만난다.", en:"I meet new friends at camp."},
-  {ko:"아샤는 남아프리카에서 왔다.", en:"Asha is from South Africa."},
-  {ko:"진은 한국에서 왔다.", en:"Jin is from Korea."},
-  {ko:"미아는 러시아에서 왔다.", en:"Mia is from Russia."},
-  {ko:"후안은 멕시코에서 왔다.", en:"Juan is from Mexico."},
-  {ko:"자스민은 인도에서 왔다.", en:"Jasmin is from India."},
-  {ko:"나는 미국에서 왔다.", en:"I am from the U.S."},
-  {ko:"우리는 모두 친구야.", en:"We are all friends."},
-
-  // Unit 10
-  {ko:"여기 눈으로 쓸 그린빈이 있어.", en:"Here are green beans for eyes."},
-  {ko:"여기 코로 쓸 딸기가 있어.", en:"Here is a strawberry for a nose."},
-  {ko:"여기 입술로 쓸 핫도그가 있어.", en:"Here is a hot dog for lips."},
-  {ko:"여기 머리카락으로 쓸 스파게티가 있어.", en:"Here is spaghetti for hair."},
-  {ko:"내 팬케이크를 봐.", en:"Look at my pancake."},
-  {ko:"이건 우리 엄마 얼굴이야!", en:"It is my mom’s face!"}
-];
-
-const unscrambleData = [
-  {words:["on","An apple","the desk","is"], answer:"An apple is on the desk."},
-  {words:["The dogs","in","are","the house"], answer:"The dogs are in the house."},
-  {words:["under","are","the table","The oranges"], answer:"The oranges are under the table."},
-  {words:["the door","behind","A cat","is"], answer:"A cat is behind the door."},
-  {words:["My friends","next to","are","the bus"], answer:"My friends are next to the bus."}
-];
-
-let currentMode="";
-let currentIndex=0;
-let selectedWords=[];
-
-// =====================
-// 🎤 모드 설정
-// =====================
-
-function setMode(mode){
-  currentMode=mode;
-  document.getElementById("mainArea").innerHTML="";
-  if(mode==="speaking") loadSpeaking();
-  if(mode==="unscramble") loadUnscramble();
-}
-
-// =====================
-// 🎤 말하기 모드
-// =====================
-
-function loadSpeaking(){
-  nextSpeaking();
-
-  document.getElementById("mainArea").innerHTML+=`
-  <button class="black" onclick="nextSpeaking()">새 문장</button>
-  <button class="green" onclick="toggleRecording()">녹음 시작/중지</button>
-  <button class="blue" onclick="startSTT()">STT 시작</button>
-  <audio id="audioPlayback" controls style="width:100%; margin-top:10px;"></audio>
-  <textarea id="sttResult"></textarea>
-  <button class="purple" onclick="evaluate()">AI 간단 평가</button>
-  <div id="feedback" class="result" style="display:none;"></div>
-  `;
-}
-
-function nextSpeaking(){
-  currentIndex=Math.floor(Math.random()*speakingData.length);
-  document.getElementById("mainArea").innerHTML=
-  `<div class="prompt">${speakingData[currentIndex].ko}</div>`;
-}
-
-let mediaRecorder;
-let audioChunks=[];
-
-function toggleRecording(){
-  if(!mediaRecorder || mediaRecorder.state==="inactive"){
-    navigator.mediaDevices.getUserMedia({audio:true})
-    .then(stream=>{
-      mediaRecorder=new MediaRecorder(stream);
-      mediaRecorder.start();
-      audioChunks=[];
-      mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
-      mediaRecorder.onstop=()=>{
-        const blob=new Blob(audioChunks,{type:"audio/webm"});
-        document.getElementById("audioPlayback").src=
-        URL.createObjectURL(blob);
-      };
-    });
-  } else {
-    mediaRecorder.stop();
-  }
-}
-
-function startSTT(){
-  const recognition=new webkitSpeechRecognition();
-  recognition.lang="en-US";
-  recognition.start();
-  recognition.onresult=function(event){
-    document.getElementById("sttResult").value=
-    event.results[0][0].transcript;
+    "오픽": {
+      "TV/시청": {
+        "Unit 1": [
+          { ko:"(샘플) 난 티비를 자주 보지 않는다. 볼 때는 그냥 쉬려고 본다.", en:"(Sample) I don't watch TV often. I just watch it to relax.", scramble:["I","don't","watch","TV","often","I","just","watch","it","to","relax"], keys:["i","dont","watch","tv","often","just","to","relax"] }
+        ]
+      }
+    }
   };
-}
 
-function evaluate(){
-  const user=document.getElementById("sttResult").value.toLowerCase();
-  const answer=speakingData[currentIndex].en.toLowerCase();
-  const keywords=answer.replace(/[^\w\s]/g,'').split(" ");
+  // UI refs
+  const courseSelect = document.getElementById("courseSelect");
+  const bookSelect = document.getElementById("bookSelect");
+  const unitSelect = document.getElementById("unitSelect");
 
-  let score=0;
-  keywords.forEach(word=>{
-    if(user.includes(word)) score++;
-  });
+  const elPrompt = document.getElementById("koreanPrompt");
+  const elStatus = document.getElementById("status");
+  const elStt = document.getElementById("sttText");
+  const elResult = document.getElementById("result");
 
-  const percent=Math.round(score/keywords.length*100);
+  const hintBox = document.getElementById("hintBox");
+  const hintChips = document.getElementById("hintChips");
 
-  document.getElementById("feedback").style.display="block";
-  document.getElementById("feedback").innerHTML=
-  `<b>모범 문장:</b> ${speakingData[currentIndex].en}<br><br>
-   <b>점수:</b> ${percent}/100`;
-}
+  const btnNext = document.getElementById("btnNext");
+  const btnHint = document.getElementById("btnHint");
+  const btnShuffleHint = document.getElementById("btnShuffleHint");
+  const btnRecord = document.getElementById("btnRecord");
+  const btnSTT = document.getElementById("btnSTT");
+  const btnAnalyze = document.getElementById("btnAnalyze");
+  const btnClear = document.getElementById("btnClear");
+  const playback = document.getElementById("playback");
 
-// =====================
-// 🧩 순서 맞추기 모드
-// =====================
+  // Modal
+  const overlay = document.getElementById("overlay");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalBody = document.getElementById("modalBody");
+  const modalOk = document.getElementById("modalOk");
+  const modalClose = document.getElementById("modalClose");
 
-function loadUnscramble(){
-  currentIndex=Math.floor(Math.random()*unscrambleData.length);
-  selectedWords=[];
-  renderUnscramble();
-}
-
-function renderUnscramble(){
-  const data=unscrambleData[currentIndex];
-  let html=`<div class="prompt">단어를 눌러 순서를 맞춰보세요</div>`;
-
-  data.words
-  .sort(()=>Math.random()-0.5)
-  .forEach(word=>{
-    html+=`<div class="word-box" onclick="selectWord(this,'${word}')">${word}</div>`;
-  });
-
-  html+=`
-  <div style="margin-top:15px;"><b>내 문장:</b> <span id="sentenceArea"></span></div>
-  <button class="purple" onclick="checkAnswer()">정답 확인</button>
-  <div id="unscrambleResult" class="result" style="display:none;"></div>
-  `;
-
-  document.getElementById("mainArea").innerHTML=html;
-}
-
-function selectWord(element,word){
-  selectedWords.push(word);
-  element.classList.add("selected");
-  element.onclick=null;
-  document.getElementById("sentenceArea").innerText=
-  selectedWords.join(" ");
-}
-
-function checkAnswer(){
-  const userSentence=selectedWords.join(" ").trim();
-  const correct=unscrambleData[currentIndex].answer;
-
-  const result=document.getElementById("unscrambleResult");
-  result.style.display="block";
-
-  if(userSentence===correct.replace(".","")){
-    result.innerHTML="✅ 정답입니다!";
-  } else {
-    result.innerHTML=`❌ 다시 시도해보세요!<br><br>정답: ${correct}`;
+  function showModal(title, body){
+    modalTitle.textContent = title;
+    modalBody.innerHTML = body;
+    overlay.style.display = "flex";
   }
-}
+  function hideModal(){ overlay.style.display = "none"; }
+  modalOk.addEventListener("click", hideModal);
+  modalClose.addEventListener("click", hideModal);
+  overlay.addEventListener("click", (e)=>{ if(e.target === overlay) hideModal(); });
 
+  function setStatus(msg){ elStatus.textContent = msg || ""; }
+
+  // state
+  let hintOn = false;
+  let currentItem = null;
+  let currentHint = [];
+
+  function getCurrentList(){
+    const c = courseSelect.value;
+    const b = bookSelect.value;
+    const u = unitSelect.value;
+    const list = DATA?.[c]?.[b]?.[u];
+    return Array.isArray(list) ? list : [];
+  }
+
+  function shuffle(arr){
+    const a = (arr || []).slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function renderHint(){
+    hintChips.innerHTML = "";
+    currentHint.forEach(w=>{
+      const span = document.createElement("span");
+      span.className = "chip";
+      span.textContent = w;
+      hintChips.appendChild(span);
+    });
+  }
+
+  function resetOutputs(){
+    elStt.value = "";
+    elResult.style.display = "none";
+    elResult.innerHTML = "";
+    playback.removeAttribute("src");
+    playback.load();
+  }
+
+  function pickSentence(){
+    const list = getCurrentList();
+    if(list.length === 0){
+      showModal("문장이 없어요", "선택한 코스/교재/유닛에 문장이 없습니다. DATA에 문장을 먼저 추가하세요!");
+      return;
+    }
+    currentItem = list[Math.floor(Math.random() * list.length)];
+
+    elPrompt.textContent = currentItem.ko;
+    resetOutputs();
+    setStatus("영어로 말해보세요. (힌트가 필요하면 ON)");
+
+    currentHint = shuffle(currentItem.scramble || []);
+    if(hintOn){
+      hintBox.style.display = "block";
+      renderHint();
+    } else {
+      hintBox.style.display = "none";
+    }
+  }
+
+  btnNext.addEventListener("click", pickSentence);
+
+  btnHint.addEventListener("click", ()=>{
+    hintOn = !hintOn;
+    btnHint.textContent = hintOn ? "언스크램블 힌트: ON" : "언스크램블 힌트: OFF";
+    if(!currentItem){
+      setStatus("문장을 먼저 선택하세요.");
+      hintBox.style.display = "none";
+      return;
+    }
+    hintBox.style.display = hintOn ? "block" : "none";
+    if(hintOn){
+      if(!currentHint.length) currentHint = shuffle(currentItem.scramble || []);
+      renderHint();
+      setStatus("힌트 ON! 단어 카드를 보고 문장 순서를 만들어 말해보세요.");
+    } else {
+      setStatus("힌트 OFF! 이제 한글만 보고 말해보세요.");
+    }
+  });
+
+  btnShuffleHint.addEventListener("click", ()=>{
+    if(!currentItem){
+      showModal("문장 먼저!", "먼저 <b>새 문장</b>을 눌러 문장을 선택하세요.");
+      return;
+    }
+    currentHint = shuffle(currentItem.scramble || []);
+    if(hintOn){
+      renderHint();
+      setStatus("힌트를 다시 섞었어요!");
+    } else {
+      setStatus("힌트가 OFF예요. ON으로 켜면 단어 카드가 보입니다.");
+    }
+  });
+
+  btnClear.addEventListener("click", ()=>{
+    resetOutputs();
+    setStatus("초기화 완료");
+  });
+
+  // dropdown builders
+  function setOptions(selectEl, items, placeholder){
+    selectEl.innerHTML = "";
+    (items || []).forEach(v=>{
+      const opt = document.createElement("option");
+      opt.value = v; opt.textContent = v;
+      selectEl.appendChild(opt);
+    });
+    if(items.length === 0){
+      const opt = document.createElement("option");
+      opt.value = ""; opt.textContent = placeholder || "(없음)";
+      selectEl.appendChild(opt);
+    }
+  }
+
+  function buildCourse(){
+    const courses = Object.keys(DATA);
+    setOptions(courseSelect, courses, "코스 없음");
+  }
+
+  function buildBook(){
+    const c = courseSelect.value;
+    const books = c && DATA[c] ? Object.keys(DATA[c]) : [];
+    setOptions(bookSelect, books, "교재 없음");
+  }
+
+  function buildUnit(){
+    const c = courseSelect.value;
+    const b = bookSelect.value;
+    const units = (c && b && DATA[c] && DATA[c][b]) ? Object.keys(DATA[c][b]) : [];
+    // 초등은 대체로 1~16이니, 없는 유닛을 "선택지로만" 깔아두는 옵션도 가능.
+    // 지금은 "데이터가 있는 유닛만" 보여주는 버전.
+    setOptions(unitSelect, units, "유닛 없음");
+  }
+
+  function onChangeSelection(){
+    buildBook();
+    buildUnit();
+    currentItem = null;
+    elPrompt.textContent = "“새 문장”을 눌러 시작하세요";
+    hintBox.style.display = "none";
+    setStatus("선택 완료. 새 문장을 눌러 말하기 시작!");
+    resetOutputs();
+  }
+
+  courseSelect.addEventListener("change", onChangeSelection);
+  bookSelect.addEventListener("change", ()=>{
+    buildUnit();
+    currentItem = null;
+    elPrompt.textContent = "“새 문장”을 눌러 시작하세요";
+    hintBox.style.display = "none";
+    setStatus("유닛까지 선택 후 새 문장을 눌러주세요!");
+    resetOutputs();
+  });
+  unitSelect.addEventListener("change", ()=>{
+    currentItem = null;
+    elPrompt.textContent = "“새 문장”을 눌러 시작하세요";
+    hintBox.style.display = "none";
+    setStatus("유닛 선택 완료! 새 문장을 눌러주세요.");
+    resetOutputs();
+  });
+
+  // init selects (기본값: 초등 말하기)
+  buildCourse();
+  // 기본 course를 "초등 말하기"로 맞추고 싶으면:
+  const defaultCourse = "초등 말하기";
+  if([...courseSelect.options].some(o=>o.value===defaultCourse)) courseSelect.value = defaultCourse;
+  buildBook();
+
+  const defaultBook = "리딩";
+  if([...bookSelect.options].some(o=>o.value===defaultBook)) bookSelect.value = defaultBook;
+  buildUnit();
+
+  const defaultUnit = "Unit 13";
+  if([...unitSelect.options].some(o=>o.value===defaultUnit)) unitSelect.value = defaultUnit;
+
+  setStatus("선택 완료. 새 문장을 눌러 말하기 시작!");
+
+  // ✅ Recording (MediaRecorder)
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let isRecording = false;
+
+  async function toggleRecording(){
+    if(!isRecording){
+      try{
+        const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e)=>{ if(e.data.size>0) audioChunks.push(e.data); };
+        mediaRecorder.onstop = ()=>{
+          stream.getTracks().forEach(t=>t.stop());
+          const blob = new Blob(audioChunks, { type:"audio/webm" });
+          const url = URL.createObjectURL(blob);
+          playback.src = url;
+          playback.load();
+          setStatus("녹음 완료! ▶︎ 내 목소리 들어보고, STT/평가를 눌러보세요.");
+          showModal("녹음 끝!", "좋아요! 이제 <b>내 목소리</b>를 들어보거나 <b>STT/AI 평가</b>를 눌러보세요.");
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        btnRecord.textContent = "🛑 녹음 중지";
+        btnRecord.classList.remove("btn-success");
+        btnRecord.classList.add("btn-danger");
+        setStatus("🔴 녹음 중... 영어로 천천히 또박또박 말해보세요.");
+      }catch(err){
+        console.error(err);
+        showModal("마이크 권한 필요", "마이크 권한을 허용해야 녹음할 수 있어요. (브라우저 설정에서 허용)");
+      }
+    } else {
+      try{ mediaRecorder.stop(); }catch(e){}
+      isRecording = false;
+      btnRecord.textContent = "🎤 녹음 시작";
+      btnRecord.classList.remove("btn-danger");
+      btnRecord.classList.add("btn-success");
+    }
+  }
+  btnRecord.addEventListener("click", toggleRecording);
+
+  // ✅ STT (SpeechRecognition)
+  let recognition = null;
+  let isSTT = false;
+
+  function initSTT(){
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR) return null;
+    const r = new SR();
+    r.lang = "en-US";
+    r.continuous = true;
+    r.interimResults = true;
+
+    r.onresult = (event)=>{
+      let transcript = "";
+      for(let i=event.resultIndex;i<event.results.length;i++){
+        transcript += event.results[i][0].transcript;
+      }
+      elStt.value = transcript.trim();
+    };
+
+    r.onerror = ()=>{
+      isSTT = false;
+      btnSTT.textContent = "📝 STT 시작";
+      btnSTT.classList.remove("btn-danger");
+      btnSTT.classList.add("btn-primary");
+      setStatus("STT 오류/중단: 기기/브라우저에 따라 품질이 다를 수 있어요.");
+    };
+
+    r.onend = ()=>{
+      if(isSTT){
+        isSTT = false;
+        btnSTT.textContent = "📝 STT 시작";
+        btnSTT.classList.remove("btn-danger");
+        btnSTT.classList.add("btn-primary");
+        setStatus("STT가 종료됐어요. 필요하면 다시 시작하세요.");
+      }
+    };
+
+    return r;
+  }
+
+  btnSTT.addEventListener("click", ()=>{
+    if(!recognition) recognition = initSTT();
+    if(!recognition){
+      showModal("STT 미지원", "이 브라우저는 STT(Web Speech API)를 지원하지 않을 수 있어요. 녹음/재생은 계속 사용할 수 있어요.");
+      return;
+    }
+    if(!isSTT){
+      try{
+        recognition.start();
+        isSTT = true;
+        btnSTT.textContent = "🛑 STT 중지";
+        btnSTT.classList.remove("btn-primary");
+        btnSTT.classList.add("btn-danger");
+        setStatus("🟦 STT 듣는 중... 영어로 말해보세요.");
+      }catch(e){
+        setStatus("STT가 이미 시작된 상태일 수 있어요.");
+      }
+    } else {
+      try{ recognition.stop(); }catch(e){}
+      isSTT = false;
+      btnSTT.textContent = "📝 STT 시작";
+      btnSTT.classList.remove("btn-danger");
+      btnSTT.classList.add("btn-primary");
+      setStatus("STT 중지됨");
+    }
+  });
+
+  // ✅ Simple analysis (keyword coverage)
+  function normalize(text){
+    return (text||"")
+      .toLowerCase()
+      .replace(/[^a-z0-9\s']/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function analyze(){
+    if(!currentItem){
+      showModal("문장 먼저!", "먼저 <b>새 문장</b>을 눌러 문장을 선택하세요.");
+      return;
+    }
+    const user = normalize(elStt.value);
+    if(!user || user.length < 3){
+      showModal("텍스트가 너무 짧아요", "STT가 비었거나 너무 짧아요. <b>STT</b>를 켜고 말해보거나, 직접 한 줄이라도 입력해보세요.");
+      return;
+    }
+
+    const words = new Set(user.split(" "));
+    const required = currentItem.keys || [];
+    const missing = required.filter(k => !words.has(k));
+    const hit = required.length - missing.length;
+    const score = required.length ? Math.round((hit/required.length)*100) : 0;
+
+    const tips = [];
+    if(required.includes("is") && !words.has("is")) tips.push("be동사 <b>is</b>가 필요해요.");
+    if(required.includes("are") && !words.has("are")) tips.push("be동사 <b>are</b>가 필요해요.");
+    if(user.includes("next") && !user.includes("next to")) tips.push("<b>next to</b>는 두 단어를 붙여서 말해요.");
+    if(tips.length === 0) tips.push("좋아요! 이제 힌트를 끄고(OFF) 한글만 보고 말해보세요.");
+
+    const requiredHtml = `<div class="chips">${
+      required.map(k => `<span class="chip ${words.has(k)?"good":"bad"}">${k}</span>`).join("")
+    }</div>`;
+    const missingHtml = missing.length
+      ? `<div class="chips">${missing.map(m=>`<span class="chip bad">누락: ${m}</span>`).join("")}</div>`
+      : `<div class="chips"><span class="chip good">키워드 OK!</span></div>`;
+
+    elResult.innerHTML = `
+      <div><b>✅ 모범 문장(예시):</b><br/>${currentItem.en}</div>
+      <div style="margin-top:10px"><b>🧠 AI 간단 점수:</b> ${score}/100 (키워드 기반)</div>
+      <div style="margin-top:8px"><b>🔑 키워드 체크</b></div>
+      ${requiredHtml}
+      ${missingHtml}
+      <div style="margin-top:10px"><b>📌 한 줄 피드백:</b><br/>${tips.map(t=>`• ${t}`).join("<br/>")}</div>
+      <div style="margin-top:10px; color:#6b7280; font-size:12px">
+        * MVP 평가는 STT 텍스트 기반 “키워드 커버리지”만 체크합니다. (정교한 문법/발음 평가는 API 연결 시 가능)
+      </div>
+    `;
+    elResult.style.display = "block";
+    setStatus("평가 완료! 다시 말해보고 점수 올려보기 👌");
+  }
+  btnAnalyze.addEventListener("click", analyze);
 </script>
 </body>
 </html>
